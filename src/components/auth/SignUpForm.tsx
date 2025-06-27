@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,12 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Eye, EyeOff, Mail, Lock, User, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface SignUpFormProps {
-  onSwitchToSignIn: () => void;
-}
-
-export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
+export const SignUpForm = () => {
   const { signUp } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -46,13 +44,18 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     setLoading(true);
 
     try {
+      const redirectUrl = `${window.location.origin}/`;
+      
       await signUp(formData.email, formData.password, {
         first_name: formData.firstName,
         last_name: formData.lastName,
-        role: formData.role
+        role: formData.role,
+        emailRedirectTo: redirectUrl
       });
+      
       toast.success('Account created successfully! Please check your email for verification.');
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast.error(error.message || 'Failed to create account');
     } finally {
       setLoading(false);
@@ -185,7 +188,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
         <span className="text-gray-600 dark:text-gray-400">Already have an account? </span>
         <button
           type="button"
-          onClick={onSwitchToSignIn}
+          onClick={() => navigate('/signin')}
           className="text-blue-600 dark:text-blue-400 hover:text-purple-600 dark:hover:text-purple-400 font-semibold transition-colors duration-300"
         >
           Sign in

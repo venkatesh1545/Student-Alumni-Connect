@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,12 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface SignInFormProps {
-  onSwitchToSignUp: () => void;
-}
-
-export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
+export const SignInForm = () => {
   const { signIn } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +24,7 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
       await signIn(email, password);
       toast.success('Welcome back!');
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast.error(error.message || 'Failed to sign in');
     } finally {
       setLoading(false);
@@ -87,7 +86,7 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
         <span className="text-gray-600 dark:text-gray-400">Don't have an account? </span>
         <button
           type="button"
-          onClick={onSwitchToSignUp}
+          onClick={() => navigate('/signup')}
           className="text-blue-600 dark:text-blue-400 hover:text-purple-600 dark:hover:text-purple-400 font-semibold transition-colors duration-300"
         >
           Sign up

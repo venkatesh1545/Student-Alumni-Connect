@@ -5,8 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { AuthPage } from '@/components/auth/AuthPage';
 import { LandingPage } from '@/components/landing/LandingPage';
+import { SignInPage } from '@/pages/SignInPage';
+import { SignUpPage } from '@/pages/SignUpPage';
 import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 
@@ -14,7 +15,6 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { user, loading } = useAuth();
-  const [showAuth, setShowAuth] = React.useState(false);
 
   if (loading) {
     return (
@@ -30,10 +30,13 @@ const AppContent = () => {
   }
 
   if (!user) {
-    if (showAuth) {
-      return <AuthPage />;
-    }
-    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+    return (
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+      </Routes>
+    );
   }
 
   return (
@@ -42,6 +45,8 @@ const AppContent = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
+          <Route path="/signin" element={<DashboardHome />} />
+          <Route path="/signup" element={<DashboardHome />} />
         </Routes>
       </main>
     </div>
