@@ -9,7 +9,411 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      alumni_profiles: {
+        Row: {
+          availability_for_mentorship: boolean | null
+          availability_for_referrals: boolean | null
+          company: string | null
+          created_at: string
+          department: string | null
+          designation: string | null
+          domain: string | null
+          experience_years: number | null
+          graduation_year: number | null
+          id: string
+          university: string | null
+          updated_at: string
+        }
+        Insert: {
+          availability_for_mentorship?: boolean | null
+          availability_for_referrals?: boolean | null
+          company?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          domain?: string | null
+          experience_years?: number | null
+          graduation_year?: number | null
+          id: string
+          university?: string | null
+          updated_at?: string
+        }
+        Update: {
+          availability_for_mentorship?: boolean | null
+          availability_for_referrals?: boolean | null
+          company?: string | null
+          created_at?: string
+          department?: string | null
+          designation?: string | null
+          domain?: string | null
+          experience_years?: number | null
+          graduation_year?: number | null
+          id?: string
+          university?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alumni_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      badges: {
+        Row: {
+          badge_name: string
+          badge_type: string
+          description: string | null
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_name: string
+          badge_type: string
+          description?: string | null
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_name?: string
+          badge_type?: string
+          description?: string | null
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_matches: {
+        Row: {
+          created_at: string
+          id: string
+          job_id: string
+          similarity_score: number | null
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          job_id: string
+          similarity_score?: number | null
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          job_id?: string
+          similarity_score?: number | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_matches_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_matches_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          alumni_id: string
+          company: string
+          created_at: string
+          description: string
+          external_url: string | null
+          id: string
+          is_active: boolean | null
+          job_type: string | null
+          keywords: string[] | null
+          location: string | null
+          requirements: string[] | null
+          salary_range: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          alumni_id: string
+          company: string
+          created_at?: string
+          description: string
+          external_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          job_type?: string | null
+          keywords?: string[] | null
+          location?: string | null
+          requirements?: string[] | null
+          salary_range?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          alumni_id?: string
+          company?: string
+          created_at?: string
+          description?: string
+          external_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          job_type?: string | null
+          keywords?: string[] | null
+          location?: string | null
+          requirements?: string[] | null
+          salary_range?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_alumni_id_fkey"
+            columns: ["alumni_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentorship_requests: {
+        Row: {
+          alumni_id: string
+          alumni_response: string | null
+          created_at: string
+          id: string
+          message: string | null
+          status: Database["public"]["Enums"]["mentorship_status"] | null
+          student_id: string
+          topics: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          alumni_id: string
+          alumni_response?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["mentorship_status"] | null
+          student_id: string
+          topics?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          alumni_id?: string
+          alumni_response?: string | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["mentorship_status"] | null
+          student_id?: string
+          topics?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentorship_requests_alumni_id_fkey"
+            columns: ["alumni_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mentorship_requests_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          email: string
+          first_name: string | null
+          github_url: string | null
+          id: string
+          last_name: string | null
+          linkedin_url: string | null
+          phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          theme_preference:
+            | Database["public"]["Enums"]["theme_preference"]
+            | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email: string
+          first_name?: string | null
+          github_url?: string | null
+          id: string
+          last_name?: string | null
+          linkedin_url?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          theme_preference?:
+            | Database["public"]["Enums"]["theme_preference"]
+            | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          github_url?: string | null
+          id?: string
+          last_name?: string | null
+          linkedin_url?: string | null
+          phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          theme_preference?:
+            | Database["public"]["Enums"]["theme_preference"]
+            | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          alumni_id: string
+          alumni_response: string | null
+          created_at: string
+          id: string
+          job_id: string
+          message: string | null
+          status: Database["public"]["Enums"]["referral_status"] | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          alumni_id: string
+          alumni_response?: string | null
+          created_at?: string
+          id?: string
+          job_id: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["referral_status"] | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          alumni_id?: string
+          alumni_response?: string | null
+          created_at?: string
+          id?: string
+          job_id?: string
+          message?: string | null
+          status?: Database["public"]["Enums"]["referral_status"] | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_alumni_id_fkey"
+            columns: ["alumni_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_profiles: {
+        Row: {
+          certifications: string[] | null
+          cgpa: number | null
+          created_at: string
+          department: string | null
+          graduation_year: number | null
+          id: string
+          placement_readiness_score: number | null
+          resume_text: string | null
+          resume_url: string | null
+          skills: string[] | null
+          student_id: string | null
+          university: string | null
+          updated_at: string
+        }
+        Insert: {
+          certifications?: string[] | null
+          cgpa?: number | null
+          created_at?: string
+          department?: string | null
+          graduation_year?: number | null
+          id: string
+          placement_readiness_score?: number | null
+          resume_text?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          student_id?: string | null
+          university?: string | null
+          updated_at?: string
+        }
+        Update: {
+          certifications?: string[] | null
+          cgpa?: number | null
+          created_at?: string
+          department?: string | null
+          graduation_year?: number | null
+          id?: string
+          placement_readiness_score?: number | null
+          resume_text?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          student_id?: string | null
+          university?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +422,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      mentorship_status:
+        | "pending"
+        | "accepted"
+        | "rejected"
+        | "active"
+        | "completed"
+      referral_status: "pending" | "accepted" | "rejected" | "completed"
+      theme_preference: "light" | "dark" | "system"
+      user_role: "student" | "alumni" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +545,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      mentorship_status: [
+        "pending",
+        "accepted",
+        "rejected",
+        "active",
+        "completed",
+      ],
+      referral_status: ["pending", "accepted", "rejected", "completed"],
+      theme_preference: ["light", "dark", "system"],
+      user_role: ["student", "alumni", "admin"],
+    },
   },
 } as const
