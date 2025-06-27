@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthPage } from '@/components/auth/AuthPage';
+import { LandingPage } from '@/components/landing/LandingPage';
 import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 
@@ -13,6 +14,7 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { user, loading } = useAuth();
+  const [showAuth, setShowAuth] = React.useState(false);
 
   if (loading) {
     return (
@@ -28,7 +30,10 @@ const AppContent = () => {
   }
 
   if (!user) {
-    return <AuthPage />;
+    if (showAuth) {
+      return <AuthPage />;
+    }
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
   return (
