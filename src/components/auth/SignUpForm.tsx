@@ -44,7 +44,7 @@ export const SignUpForm = () => {
     setLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const redirectUrl = `${window.location.origin}/verification-success`;
       
       await signUp(formData.email, formData.password, {
         first_name: formData.firstName,
@@ -53,7 +53,7 @@ export const SignUpForm = () => {
         emailRedirectTo: redirectUrl
       });
       
-      toast.success('Account created successfully! Please check your email for verification.');
+      toast.success('Account created! Please check your email to verify your account.');
     } catch (error: any) {
       console.error('Sign up error:', error);
       toast.error(error.message || 'Failed to create account');

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +20,7 @@ export const AlumniDashboard = () => {
     { title: 'Post New Job', description: 'Share job opportunities with students', action: () => navigate('/post-job') },
     { title: 'View Applications', description: 'Review student applications', action: () => navigate('/applications') },
     { title: 'Messages', description: 'Connect with students', action: () => navigate('/messages') },
-    { title: 'My Profile', description: 'Update your alumni profile', action: () => navigate('/profile') }
+    { title: 'My Profile', description: 'Update your alumni profile', action: () => navigate('/alumni-profile') }
   ];
 
   return (

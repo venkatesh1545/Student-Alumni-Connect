@@ -8,11 +8,13 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { SignInPage } from '@/pages/SignInPage';
 import { SignUpPage } from '@/pages/SignUpPage';
+import { VerificationSuccessPage } from '@/pages/VerificationSuccessPage';
 import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { JobsPage } from '@/components/jobs/JobsPage';
 import { PostJobForm } from '@/components/jobs/PostJobForm';
 import { StudentProfile } from '@/components/profile/StudentProfile';
+import { AlumniProfile } from '@/components/profile/AlumniProfile';
 import { MessagesList } from '@/components/messaging/MessagesList';
 
 const queryClient = new QueryClient();
@@ -39,6 +41,7 @@ const AppContent = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/verification-success" element={<VerificationSuccessPage />} />
       </Routes>
     );
   }
@@ -52,9 +55,11 @@ const AppContent = () => {
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/post-job" element={<PostJobForm />} />
           <Route path="/profile" element={<StudentProfile />} />
+          <Route path="/alumni-profile" element={<AlumniProfile />} />
           <Route path="/messages" element={<MessagesList />} />
           <Route path="/signin" element={<DashboardHome />} />
           <Route path="/signup" element={<DashboardHome />} />
+          <Route path="/verification-success" element={<DashboardHome />} />
         </Routes>
       </main>
     </div>

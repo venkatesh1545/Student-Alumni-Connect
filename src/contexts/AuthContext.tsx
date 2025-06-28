@@ -48,8 +48,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       async (event, session) => {
         console.log('Auth state change:', event, session);
         setUser(session?.user ?? null);
+        
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          // Use setTimeout to prevent infinite recursion
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
         } else {
           setProfile(null);
           setLoading(false);
@@ -90,7 +94,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       password,
       options: {
         data: userData,
-        emailRedirectTo: userData.emailRedirectTo || `${window.location.origin}/`
+        emailRedirectTo: userData.emailRedirectTo || `${window.location.origin}/verification-success`
       }
     });
     
