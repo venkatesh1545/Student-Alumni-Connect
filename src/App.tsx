@@ -10,6 +10,10 @@ import { SignInPage } from '@/pages/SignInPage';
 import { SignUpPage } from '@/pages/SignUpPage';
 import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
+import { JobsPage } from '@/components/jobs/JobsPage';
+import { PostJobForm } from '@/components/jobs/PostJobForm';
+import { StudentProfile } from '@/components/profile/StudentProfile';
+import { MessagesList } from '@/components/messaging/MessagesList';
 
 const queryClient = new QueryClient();
 
@@ -45,6 +49,10 @@ const AppContent = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
+          <Route path="/jobs" element={<JobsPage />} />
+          <Route path="/post-job" element={<PostJobForm />} />
+          <Route path="/profile" element={<StudentProfile />} />
+          <Route path="/messages" element={<MessagesList />} />
           <Route path="/signin" element={<DashboardHome />} />
           <Route path="/signup" element={<DashboardHome />} />
         </Routes>

@@ -13,9 +13,9 @@ export const AuthPage = () => {
       subtitle={isSignIn ? 'Connect with your alumni network' : 'Connect students and alumni worldwide'}
     >
       {isSignIn ? (
-        <SignInForm onSwitchToSignUp={() => setIsSignIn(false)} />
+        <SignInForm />
       ) : (
-        <SignUpForm onSwitchToSignIn={() => setIsSignIn(true)} />
+        <SignUpForm />
       )}
     </AuthLayout>
   );
