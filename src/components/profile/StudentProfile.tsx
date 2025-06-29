@@ -75,9 +75,9 @@ export const StudentProfile = () => {
         codechef_url: ''
       });
       setSkills(studentProfile.skills || []);
-      setProjects(JSON.parse(studentProfile.projects || '[]'));
-      setInternships(JSON.parse(studentProfile.internships || '[]'));
-      setAchievements(JSON.parse(studentProfile.achievements || '[]'));
+      setProjects(studentProfile.projects ? JSON.parse(JSON.stringify(studentProfile.projects)) : []);
+      setInternships(studentProfile.internships ? JSON.parse(JSON.stringify(studentProfile.internships)) : []);
+      setAchievements(studentProfile.achievements ? JSON.parse(JSON.stringify(studentProfile.achievements)) : []);
     }
   }, [studentProfile, profile]);
 
@@ -94,9 +94,9 @@ export const StudentProfile = () => {
         department: formData.department,
         university: formData.university,
         skills: skills,
-        projects: JSON.stringify(projects),
-        internships: JSON.stringify(internships),
-        achievements: JSON.stringify(achievements)
+        projects: projects,
+        internships: internships,
+        achievements: achievements
       };
 
       const { error: studentError } = await supabase

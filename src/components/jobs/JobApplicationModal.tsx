@@ -33,6 +33,10 @@ export const JobApplicationModal = ({ isOpen, onClose, job, onApply, studentProf
     onClose();
   };
 
+  const handleTermsChange = (checked: boolean | 'indeterminate') => {
+    setAgreedToTerms(checked === true);
+  };
+
   const ProfilePreview = () => (
     <Card className="mt-4">
       <CardHeader>
@@ -162,7 +166,7 @@ export const JobApplicationModal = ({ isOpen, onClose, job, onApply, studentProf
               <Checkbox
                 id="terms"
                 checked={agreedToTerms}
-                onCheckedChange={setAgreedToTerms}
+                onCheckedChange={handleTermsChange}
               />
               <div className="grid gap-1.5 leading-none">
                 <Label

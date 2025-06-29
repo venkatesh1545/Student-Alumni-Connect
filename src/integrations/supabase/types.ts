@@ -447,13 +447,16 @@ export type Database = {
       }
       student_profiles: {
         Row: {
+          achievements: Json | null
           certifications: string[] | null
           cgpa: number | null
           created_at: string
           department: string | null
           graduation_year: number | null
           id: string
+          internships: Json | null
           placement_readiness_score: number | null
+          projects: Json | null
           resume_text: string | null
           resume_url: string | null
           skills: string[] | null
@@ -462,13 +465,16 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          achievements?: Json | null
           certifications?: string[] | null
           cgpa?: number | null
           created_at?: string
           department?: string | null
           graduation_year?: number | null
           id: string
+          internships?: Json | null
           placement_readiness_score?: number | null
+          projects?: Json | null
           resume_text?: string | null
           resume_url?: string | null
           skills?: string[] | null
@@ -477,13 +483,16 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          achievements?: Json | null
           certifications?: string[] | null
           cgpa?: number | null
           created_at?: string
           department?: string | null
           graduation_year?: number | null
           id?: string
+          internships?: Json | null
           placement_readiness_score?: number | null
+          projects?: Json | null
           resume_text?: string | null
           resume_url?: string | null
           skills?: string[] | null
