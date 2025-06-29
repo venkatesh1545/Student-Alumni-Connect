@@ -168,76 +168,79 @@ export const MentorshipHub = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 gap-6">
-              {mentorshipRequests.map((request) => (
-                <Card key={request.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          <User className="w-5 h-5" />
-                          {request.student?.first_name} {request.student?.last_name}
-                        </CardTitle>
-                        <p className="text-gray-600 mt-1">
-                          {request.student_profile?.[0]?.university} • {request.student_profile?.[0]?.department}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Requested: {new Date(request.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <Badge variant={getStatusBadgeVariant(request.status)} className="flex items-center gap-1">
-                        {getStatusIcon(request.status)}
-                        {request.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>Topics of Interest</Label>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {request.topics?.map((topic: string) => (
-                            <Badge key={topic} variant="secondary" className="text-xs">
-                              {topic}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      {request.message && (
+              {mentorshipRequests.map((request) => {
+                const studentProfile = request.student_profile?.[0];
+                return (
+                  <Card key={request.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
                         <div>
-                          <Label>Message</Label>
-                          <p className="text-sm mt-1 p-3 bg-gray-50 rounded-lg">
-                            {request.message}
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <User className="w-5 h-5" />
+                            {request.student?.first_name} {request.student?.last_name}
+                          </CardTitle>
+                          <p className="text-gray-600 mt-1">
+                            {studentProfile?.university} • {studentProfile?.department}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Requested: {new Date(request.created_at).toLocaleDateString()}
                           </p>
                         </div>
-                      )}
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">
-                            CGPA: {request.student_profile?.[0]?.cgpa}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            Grad: {request.student_profile?.[0]?.graduation_year}
-                          </span>
+                        <Badge variant={getStatusBadgeVariant(request.status)} className="flex items-center gap-1">
+                          {getStatusIcon(request.status)}
+                          {request.status}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Topics of Interest</Label>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {request.topics?.map((topic: string) => (
+                              <Badge key={topic} variant="secondary" className="text-xs">
+                                {topic}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                        {request.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedRequest(request);
-                                setIsDialogOpen(true);
-                              }}
-                            >
-                              Respond
-                            </Button>
+                        {request.message && (
+                          <div>
+                            <Label>Message</Label>
+                            <p className="text-sm mt-1 p-3 bg-gray-50 rounded-lg">
+                              {request.message}
+                            </p>
                           </div>
                         )}
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-600">
+                              CGPA: {studentProfile?.cgpa}
+                            </span>
+                            <span className="text-sm text-gray-600">
+                              Grad: {studentProfile?.graduation_year}
+                            </span>
+                          </div>
+                          {request.status === 'pending' && (
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedRequest(request);
+                                  setIsDialogOpen(true);
+                                }}
+                              >
+                                Respond
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>
@@ -254,39 +257,42 @@ export const MentorshipHub = () => {
             </Card>
           ) : (
             <div className="grid grid-cols-1 gap-6">
-              {myRequests.map((request) => (
-                <Card key={request.id}>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">
-                          {request.alumni?.first_name} {request.alumni?.last_name}
-                        </CardTitle>
-                        <p className="text-gray-600 mt-1">
-                          {request.alumni_profile?.[0]?.designation} at {request.alumni_profile?.[0]?.company}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Requested: {new Date(request.created_at).toLocaleDateString()}
-                        </p>
+              {myRequests.map((request) => {
+                const alumniProfile = request.alumni_profile?.[0];
+                return (
+                  <Card key={request.id}>
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg">
+                            {request.alumni?.first_name} {request.alumni?.last_name}
+                          </CardTitle>
+                          <p className="text-gray-600 mt-1">
+                            {alumniProfile?.designation} at {alumniProfile?.company}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Requested: {new Date(request.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <Badge variant={getStatusBadgeVariant(request.status)} className="flex items-center gap-1">
+                          {getStatusIcon(request.status)}
+                          {request.status}
+                        </Badge>
                       </div>
-                      <Badge variant={getStatusBadgeVariant(request.status)} className="flex items-center gap-1">
-                        {getStatusIcon(request.status)}
-                        {request.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {request.alumni_response && (
-                      <div className="mt-4">
-                        <Label>Alumni Response</Label>
-                        <p className="text-sm mt-1 p-3 bg-blue-50 rounded-lg">
-                          {request.alumni_response}
-                        </p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardHeader>
+                    <CardContent>
+                      {request.alumni_response && (
+                        <div className="mt-4">
+                          <Label>Alumni Response</Label>
+                          <p className="text-sm mt-1 p-3 bg-blue-50 rounded-lg">
+                            {request.alumni_response}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>

@@ -181,8 +181,9 @@ export const ManageApplications = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {filteredApplications.map((application) => {
+            const studentProfile = application.student_profile?.[0];
             const matchScore = calculateMatchScore(
-              application.student_profile?.[0], 
+              studentProfile, 
               application.job?.keywords || []
             );
 
@@ -217,17 +218,17 @@ export const ManageApplications = () => {
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-wrap gap-2">
-                      {Array.isArray(application.student_profile?.[0]?.skills) && 
-                        application.student_profile[0].skills.slice(0, 3).map((skill: string) => (
+                      {Array.isArray(studentProfile?.skills) && 
+                        studentProfile.skills.slice(0, 3).map((skill: string) => (
                           <Badge key={skill} variant="secondary" className="text-xs">
                             {skill}
                           </Badge>
                         ))
                       }
-                      {Array.isArray(application.student_profile?.[0]?.skills) && 
-                        application.student_profile[0].skills.length > 3 && (
+                      {Array.isArray(studentProfile?.skills) && 
+                        studentProfile.skills.length > 3 && (
                           <Badge variant="secondary" className="text-xs">
-                            +{application.student_profile[0].skills.length - 3} more
+                            +{studentProfile.skills.length - 3} more
                           </Badge>
                         )
                       }
