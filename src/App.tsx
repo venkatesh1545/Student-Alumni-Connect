@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,10 +13,13 @@ import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { JobsPage } from '@/components/jobs/JobsPage';
 import { PostJobForm } from '@/components/jobs/PostJobForm';
+import { ManageJobs } from '@/components/jobs/ManageJobs';
 import { StudentProfile } from '@/components/profile/StudentProfile';
 import { AlumniProfile } from '@/components/profile/AlumniProfile';
 import { MessagesList } from '@/components/messaging/MessagesList';
 import { MyApplications } from '@/components/applications/MyApplications';
+import { ManageApplications } from '@/components/applications/ManageApplications';
+import { MentorshipHub } from '@/components/mentorship/MentorshipHub';
 
 const queryClient = new QueryClient();
 
@@ -52,12 +56,21 @@ const AppContent = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
+          {/* Job Routes */}
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/post-job" element={<PostJobForm />} />
+          <Route path="/manage-jobs" element={<ManageJobs />} />
+          {/* Profile Routes */}
           <Route path="/profile" element={<StudentProfile />} />
           <Route path="/alumni-profile" element={<AlumniProfile />} />
-          <Route path="/messages" element={<MessagesList />} />
+          {/* Application Routes */}
           <Route path="/applications" element={<MyApplications />} />
+          <Route path="/manage-applications" element={<ManageApplications />} />
+          {/* Mentorship Routes */}
+          <Route path="/mentorship" element={<MentorshipHub />} />
+          {/* Communication Routes */}
+          <Route path="/messages" element={<MessagesList />} />
+          {/* Redirect Routes */}
           <Route path="/signin" element={<DashboardHome />} />
           <Route path="/signup" element={<DashboardHome />} />
           <Route path="/verification-success" element={<DashboardHome />} />
