@@ -36,7 +36,8 @@ export const ManageApplications = () => {
             title,
             company,
             location,
-            alumni_id
+            alumni_id,
+            keywords
           ),
           student:profiles!job_applications_student_id_fkey(
             id,
@@ -115,7 +116,7 @@ export const ManageApplications = () => {
   };
 
   const calculateMatchScore = (studentProfile: any, jobKeywords: string[]) => {
-    if (!studentProfile?.skills || !jobKeywords) return 0;
+    if (!studentProfile?.skills || !jobKeywords || !Array.isArray(studentProfile.skills)) return 0;
     
     const studentSkills = studentProfile.skills.map((skill: string) => skill.toLowerCase());
     const matchingSkills = jobKeywords.filter(keyword => 
@@ -216,16 +217,20 @@ export const ManageApplications = () => {
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-wrap gap-2">
-                      {application.student_profile?.[0]?.skills?.slice(0, 3).map((skill: string) => (
-                        <Badge key={skill} variant="secondary" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {application.student_profile?.[0]?.skills?.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{application.student_profile[0].skills.length - 3} more
-                        </Badge>
-                      )}
+                      {Array.isArray(application.student_profile?.[0]?.skills) && 
+                        application.student_profile[0].skills.slice(0, 3).map((skill: string) => (
+                          <Badge key={skill} variant="secondary" className="text-xs">
+                            {skill}
+                          </Badge>
+                        ))
+                      }
+                      {Array.isArray(application.student_profile?.[0]?.skills) && 
+                        application.student_profile[0].skills.length > 3 && (
+                          <Badge variant="secondary" className="text-xs">
+                            +{application.student_profile[0].skills.length - 3} more
+                          </Badge>
+                        )
+                      }
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -318,23 +323,31 @@ export const ManageApplications = () => {
                     <div>
                       <Label>Skills</Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {selectedApplication.student_profile?.[0]?.skills?.map((skill: string) => (
-                          <Badge key={skill} variant="secondary" className="text-xs">
-                            {skill}
-                          </Badge>
-                        ))}
+                        {Array.isArray(selectedApplication.student_profile?.[0]?.skills) &&
+                          selectedApplication.student_profile[0].skills.map((skill: string) => (
+                            <Badge key={skill} variant="secondary" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))
+                        }
                       </div>
                     </div>
                     <div>
                       <Label>Projects</Label>
                       <p className="text-sm">
-                        {selectedApplication.student_profile?.[0]?.projects?.length || 0} projects
+                        {Array.isArray(selectedApplication.student_profile?.[0]?.projects) 
+                          ? selectedApplication.student_profile[0].projects.length 
+                          : 0
+                        } projects
                       </p>
                     </div>
                     <div>
                       <Label>Internships</Label>
                       <p className="text-sm">
-                        {selectedApplication.student_profile?.[0]?.internships?.length || 0} internships
+                        {Array.isArray(selectedApplication.student_profile?.[0]?.internships) 
+                          ? selectedApplication.student_profile[0].internships.length 
+                          : 0
+                        } internships
                       </p>
                     </div>
                     <div>

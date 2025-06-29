@@ -14,6 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import { MessageSquare, Clock, CheckCircle, XCircle, User } from 'lucide-react';
 
+type MentorshipStatus = 'pending' | 'accepted' | 'rejected' | 'active' | 'completed';
+
 export const MentorshipHub = () => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
@@ -84,7 +86,7 @@ export const MentorshipHub = () => {
   });
 
   const respondToRequest = useMutation({
-    mutationFn: async ({ requestId, status, response }: { requestId: string; status: string; response: string }) => {
+    mutationFn: async ({ requestId, status, response }: { requestId: string; status: MentorshipStatus; response: string }) => {
       const { error } = await supabase
         .from('mentorship_requests')
         .update({ 
@@ -210,7 +212,9 @@ export const MentorshipHub = () => {
                       )}
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">CGPA: {request.student_profile?.[0]?.cgpa}</span>
+                          <span className="text-sm text-gray-600">
+                            CGPA: {request.student_profile?.[0]?.cgpa}
+                          </span>
                           <span className="text-sm text-gray-600">
                             Grad: {request.student_profile?.[0]?.graduation_year}
                           </span>
