@@ -4,19 +4,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Upload, X } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PersonalInfoSection } from './sections/PersonalInfoSection';
+import { EducationSection } from './sections/EducationSection';
+import { SkillsSection } from './sections/SkillsSection';
+import { SocialLinksSection } from './sections/SocialLinksSection';
+import { ProjectsSection } from './sections/ProjectsSection';
+import { InternshipsSection } from './sections/InternshipsSection';
+import { AchievementsSection } from './sections/AchievementsSection';
 
 export const StudentProfile = () => {
   const { user, profile } = useAuth();
   const queryClient = useQueryClient();
   const [skills, setSkills] = useState<string[]>([]);
-  const [newSkill, setNewSkill] = useState('');
+  const [projects, setProjects] = useState([]);
+  const [internships, setInternships] = useState([]);
+  const [achievements, setAchievements] = useState([]);
 
   const { data: studentProfile, isLoading } = useQuery({
     queryKey: ['student-profile', user?.id],
@@ -41,7 +45,8 @@ export const StudentProfile = () => {
     graduation_year: '',
     department: '',
     university: '',
-    certifications: '',
+    phone: '',
+    bio: '',
     linkedin_url: '',
     github_url: '',
     portfolio_url: '',
@@ -59,7 +64,8 @@ export const StudentProfile = () => {
         graduation_year: studentProfile.graduation_year?.toString() || '',
         department: studentProfile.department || '',
         university: studentProfile.university || '',
-        certifications: studentProfile.certifications?.join('\n') || '',
+        phone: profile?.phone || '',
+        bio: profile?.bio || '',
         linkedin_url: profile?.linkedin_url || '',
         github_url: profile?.github_url || '',
         portfolio_url: '',
@@ -69,6 +75,9 @@ export const StudentProfile = () => {
         codechef_url: ''
       });
       setSkills(studentProfile.skills || []);
+      setProjects(JSON.parse(studentProfile.projects || '[]'));
+      setInternships(JSON.parse(studentProfile.internships || '[]'));
+      setAchievements(JSON.parse(studentProfile.achievements || '[]'));
     }
   }, [studentProfile, profile]);
 
@@ -85,7 +94,9 @@ export const StudentProfile = () => {
         department: formData.department,
         university: formData.university,
         skills: skills,
-        certifications: formData.certifications.split('\n').filter(cert => cert.trim())
+        projects: JSON.stringify(projects),
+        internships: JSON.stringify(internships),
+        achievements: JSON.stringify(achievements)
       };
 
       const { error: studentError } = await supabase
@@ -98,6 +109,8 @@ export const StudentProfile = () => {
       const { error: profileError } = await supabase
         .from('profiles')
         .update({
+          phone: formData.phone,
+          bio: formData.bio,
           linkedin_url: formData.linkedin_url,
           github_url: formData.github_url
         })
@@ -114,188 +127,75 @@ export const StudentProfile = () => {
     }
   });
 
-  const addSkill = () => {
-    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
-      setSkills([...skills, newSkill.trim()]);
-      setNewSkill('');
-    }
-  };
-
-  const removeSkill = (skillToRemove: string) => {
-    setSkills(skills.filter(skill => skill !== skillToRemove));
-  };
-
   if (isLoading) {
-    return <div className="p-6">Loading profile...</div>;
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Student Profile</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="student_id">Student ID</Label>
-              <Input
-                id="student_id"
-                value={formData.student_id}
-                onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="cgpa">CGPA</Label>
-              <Input
-                id="cgpa"
-                type="number"
-                step="0.01"
-                max="4.0"
-                value={formData.cgpa}
-                onChange={(e) => setFormData({ ...formData, cgpa: e.target.value })}
-              />
-            </div>
-          </div>
+    <div className="p-6 max-w-6xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Student Profile</h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Complete your profile to improve job matching and showcase your skills to alumni
+        </p>
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="graduation_year">Graduation Year</Label>
-              <Input
-                id="graduation_year"
-                type="number"
-                value={formData.graduation_year}
-                onChange={(e) => setFormData({ ...formData, graduation_year: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="department">Department</Label>
-              <Input
-                id="department"
-                value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-              />
-            </div>
-          </div>
+      <Tabs defaultValue="personal" className="space-y-6">
+        <TabsList className="grid grid-cols-4 lg:grid-cols-7 w-full">
+          <TabsTrigger value="personal">Personal</TabsTrigger>
+          <TabsTrigger value="education">Education</TabsTrigger>
+          <TabsTrigger value="skills">Skills</TabsTrigger>
+          <TabsTrigger value="social">Social</TabsTrigger>
+          <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="experience">Experience</TabsTrigger>
+          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+        </TabsList>
 
-          <div>
-            <Label htmlFor="university">University</Label>
-            <Input
-              id="university"
-              value={formData.university}
-              onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-            />
-          </div>
+        <TabsContent value="personal">
+          <PersonalInfoSection formData={formData} setFormData={setFormData} />
+        </TabsContent>
 
-          <div>
-            <Label>Skills</Label>
-            <div className="flex gap-2 mb-2">
-              <Input
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                placeholder="Add a skill"
-                onKeyPress={(e) => e.key === 'Enter' && addSkill()}
-              />
-              <Button onClick={addSkill} type="button">Add</Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill, index) => (
-                <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                  {skill}
-                  <X
-                    className="w-3 h-3 cursor-pointer"
-                    onClick={() => removeSkill(skill)}
-                  />
-                </Badge>
-              ))}
-            </div>
-          </div>
+        <TabsContent value="education">
+          <EducationSection formData={formData} setFormData={setFormData} />
+        </TabsContent>
 
-          <div>
-            <Label htmlFor="certifications">Certifications (one per line)</Label>
-            <Textarea
-              id="certifications"
-              value={formData.certifications}
-              onChange={(e) => setFormData({ ...formData, certifications: e.target.value })}
-              rows={4}
-            />
-          </div>
+        <TabsContent value="skills">
+          <SkillsSection skills={skills} setSkills={setSkills} />
+        </TabsContent>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="linkedin_url">LinkedIn URL</Label>
-              <Input
-                id="linkedin_url"
-                value={formData.linkedin_url}
-                onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="github_url">GitHub URL</Label>
-              <Input
-                id="github_url"
-                value={formData.github_url}
-                onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-              />
-            </div>
-          </div>
+        <TabsContent value="social">
+          <SocialLinksSection formData={formData} setFormData={setFormData} />
+        </TabsContent>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="portfolio_url">Portfolio URL</Label>
-              <Input
-                id="portfolio_url"
-                value={formData.portfolio_url}
-                onChange={(e) => setFormData({ ...formData, portfolio_url: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="leetcode_url">LeetCode URL</Label>
-              <Input
-                id="leetcode_url"
-                value={formData.leetcode_url}
-                onChange={(e) => setFormData({ ...formData, leetcode_url: e.target.value })}
-              />
-            </div>
-          </div>
+        <TabsContent value="projects">
+          <ProjectsSection projects={projects} setProjects={setProjects} />
+        </TabsContent>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="geeksforgeeks_url">GeeksforGeeks URL</Label>
-              <Input
-                id="geeksforgeeks_url"
-                value={formData.geeksforgeeks_url}
-                onChange={(e) => setFormData({ ...formData, geeksforgeeks_url: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label htmlFor="codeforces_url">Codeforces URL</Label>
-              <Input
-                id="codeforces_url"
-                value={formData.codeforces_url}
-                onChange={(e) => setFormData({ ...formData, codeforces_url: e.target.value })}
-              />
-            </div>
-          </div>
+        <TabsContent value="experience">
+          <InternshipsSection internships={internships} setInternships={setInternships} />
+        </TabsContent>
 
-          <div>
-            <Label htmlFor="codechef_url">CodeChef URL</Label>
-            <Input
-              id="codechef_url"
-              value={formData.codechef_url}
-              onChange={(e) => setFormData({ ...formData, codechef_url: e.target.value })}
-            />
-          </div>
+        <TabsContent value="achievements">
+          <AchievementsSection achievements={achievements} setAchievements={setAchievements} />
+        </TabsContent>
+      </Tabs>
 
-          <Button
-            onClick={() => updateProfileMutation.mutate()}
-            disabled={updateProfileMutation.isPending}
-            className="w-full"
-          >
-            {updateProfileMutation.isPending ? 'Updating...' : 'Update Profile'}
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="mt-8 flex justify-center">
+        <Button
+          onClick={() => updateProfileMutation.mutate()}
+          disabled={updateProfileMutation.isPending}
+          className="px-8 py-3 text-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+        >
+          {updateProfileMutation.isPending ? 'Updating Profile...' : 'Save All Changes'}
+        </Button>
+      </div>
     </div>
   );
 };

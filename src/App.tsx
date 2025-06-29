@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -16,6 +15,7 @@ import { PostJobForm } from '@/components/jobs/PostJobForm';
 import { StudentProfile } from '@/components/profile/StudentProfile';
 import { AlumniProfile } from '@/components/profile/AlumniProfile';
 import { MessagesList } from '@/components/messaging/MessagesList';
+import { MyApplications } from '@/components/applications/MyApplications';
 
 const queryClient = new QueryClient();
 
@@ -57,6 +57,7 @@ const AppContent = () => {
           <Route path="/profile" element={<StudentProfile />} />
           <Route path="/alumni-profile" element={<AlumniProfile />} />
           <Route path="/messages" element={<MessagesList />} />
+          <Route path="/applications" element={<MyApplications />} />
           <Route path="/signin" element={<DashboardHome />} />
           <Route path="/signup" element={<DashboardHome />} />
           <Route path="/verification-success" element={<DashboardHome />} />
