@@ -181,7 +181,7 @@ export const ManageApplications = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {filteredApplications.map((application) => {
-            const studentProfile = application.student_profile?.[0];
+            const studentProfile = Array.isArray(application.student_profile) ? application.student_profile[0] : application.student_profile;
             const matchScore = calculateMatchScore(
               studentProfile, 
               application.job?.keywords || []
@@ -299,19 +299,19 @@ export const ManageApplications = () => {
                     </div>
                     <div>
                       <Label>University</Label>
-                      <p>{selectedApplication.student_profile?.[0]?.university}</p>
+                      <p>{Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0]?.university : selectedApplication.student_profile?.university}</p>
                     </div>
                     <div>
                       <Label>Department</Label>
-                      <p>{selectedApplication.student_profile?.[0]?.department}</p>
+                      <p>{Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0]?.department : selectedApplication.student_profile?.department}</p>
                     </div>
                     <div>
                       <Label>CGPA</Label>
-                      <p>{selectedApplication.student_profile?.[0]?.cgpa}</p>
+                      <p>{Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0]?.cgpa : selectedApplication.student_profile?.cgpa}</p>
                     </div>
                     <div>
                       <Label>Graduation Year</Label>
-                      <p>{selectedApplication.student_profile?.[0]?.graduation_year}</p>
+                      <p>{Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0]?.graduation_year : selectedApplication.student_profile?.graduation_year}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -324,31 +324,33 @@ export const ManageApplications = () => {
                     <div>
                       <Label>Skills</Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {selectedApplication.student_profile?.[0]?.skills && Array.isArray(selectedApplication.student_profile[0].skills) &&
-                          selectedApplication.student_profile[0].skills.map((skill: string) => (
-                            <Badge key={skill} variant="secondary" className="text-xs">
-                              {skill}
-                            </Badge>
-                          ))
-                        }
+                        {(() => {
+                          const profile = Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0] : selectedApplication.student_profile;
+                          return profile?.skills && Array.isArray(profile.skills) &&
+                            profile.skills.map((skill: string) => (
+                              <Badge key={skill} variant="secondary" className="text-xs">
+                                {skill}
+                              </Badge>
+                            ));
+                        })()}
                       </div>
                     </div>
                     <div>
                       <Label>Projects</Label>
                       <p className="text-sm">
-                        {Array.isArray(selectedApplication.student_profile?.[0]?.projects) 
-                          ? selectedApplication.student_profile[0].projects.length 
-                          : 0
-                        } projects
+                        {(() => {
+                          const profile = Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0] : selectedApplication.student_profile;
+                          return Array.isArray(profile?.projects) ? profile.projects.length : 0;
+                        })()} projects
                       </p>
                     </div>
                     <div>
                       <Label>Internships</Label>
                       <p className="text-sm">
-                        {Array.isArray(selectedApplication.student_profile?.[0]?.internships) 
-                          ? selectedApplication.student_profile[0].internships.length 
-                          : 0
-                        } internships
+                        {(() => {
+                          const profile = Array.isArray(selectedApplication.student_profile) ? selectedApplication.student_profile[0] : selectedApplication.student_profile;
+                          return Array.isArray(profile?.internships) ? profile.internships.length : 0;
+                        })()} internships
                       </p>
                     </div>
                     <div>

@@ -169,7 +169,7 @@ export const MentorshipHub = () => {
           ) : (
             <div className="grid grid-cols-1 gap-6">
               {mentorshipRequests.map((request) => {
-                const studentProfile = request.student_profile?.[0];
+                const studentProfile = Array.isArray(request.student_profile) ? request.student_profile[0] : request.student_profile;
                 return (
                   <Card key={request.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
@@ -258,7 +258,7 @@ export const MentorshipHub = () => {
           ) : (
             <div className="grid grid-cols-1 gap-6">
               {myRequests.map((request) => {
-                const alumniProfile = request.alumni_profile?.[0];
+                const alumniProfile = Array.isArray(request.alumni_profile) ? request.alumni_profile[0] : request.alumni_profile;
                 return (
                   <Card key={request.id}>
                     <CardHeader>
