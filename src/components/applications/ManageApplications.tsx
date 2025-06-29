@@ -218,14 +218,14 @@ export const ManageApplications = () => {
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-wrap gap-2">
-                      {Array.isArray(studentProfile?.skills) && 
+                      {studentProfile?.skills && Array.isArray(studentProfile.skills) && 
                         studentProfile.skills.slice(0, 3).map((skill: string) => (
                           <Badge key={skill} variant="secondary" className="text-xs">
                             {skill}
                           </Badge>
                         ))
                       }
-                      {Array.isArray(studentProfile?.skills) && 
+                      {studentProfile?.skills && Array.isArray(studentProfile.skills) && 
                         studentProfile.skills.length > 3 && (
                           <Badge variant="secondary" className="text-xs">
                             +{studentProfile.skills.length - 3} more
@@ -324,7 +324,7 @@ export const ManageApplications = () => {
                     <div>
                       <Label>Skills</Label>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {Array.isArray(selectedApplication.student_profile?.[0]?.skills) &&
+                        {selectedApplication.student_profile?.[0]?.skills && Array.isArray(selectedApplication.student_profile[0].skills) &&
                           selectedApplication.student_profile[0].skills.map((skill: string) => (
                             <Badge key={skill} variant="secondary" className="text-xs">
                               {skill}
