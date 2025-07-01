@@ -58,14 +58,18 @@ export const StudentDashboard = () => {
     enabled: !!user
   });
 
-  // Get active jobs count for matching
-  const { data: activeJobsCount = 0 } = useQuery({
-    queryKey: ['active-jobs-count'],
+  // Get new jobs count (last 7 days)
+  const { data: newJobsCount = 0 } = useQuery({
+    queryKey: ['new-jobs-count'],
     queryFn: async () => {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
       const { count, error } = await supabase
         .from('jobs')
         .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .gte('created_at', sevenDaysAgo.toISOString());
       if (error) throw error;
       return count || 0;
     }
@@ -101,11 +105,11 @@ export const StudentDashboard = () => {
 
   const stats = [
     { 
-      label: 'Job Matches', 
-      value: activeJobsCount.toString(), 
+      label: 'New Jobs', 
+      value: newJobsCount.toString(), 
       icon: Briefcase, 
       color: 'blue',
-      description: 'Available positions'
+      description: 'Posted this week'
     },
     { 
       label: 'Applications', 
@@ -132,28 +136,16 @@ export const StudentDashboard = () => {
 
   const quickActions = [
     { 
-      title: 'Browse Jobs', 
-      description: 'Find matching job opportunities', 
+      title: 'Browse New Jobs', 
+      description: 'Find latest job opportunities', 
       action: () => navigate('/jobs'),
       color: 'blue'
     },
     { 
-      title: 'Update Profile', 
-      description: 'Complete your student profile', 
+      title: 'Complete Profile', 
+      description: 'Improve your profile score', 
       action: () => navigate('/profile'),
       color: 'green'
-    },
-    { 
-      title: 'View Messages', 
-      description: 'Check messages from alumni', 
-      action: () => navigate('/messages'),
-      color: 'purple'
-    },
-    { 
-      title: 'My Applications', 
-      description: 'Track your job applications', 
-      action: () => navigate('/applications'),
-      color: 'orange'
     }
   ];
 

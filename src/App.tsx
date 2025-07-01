@@ -9,7 +9,6 @@ import { LandingPage } from '@/components/landing/LandingPage';
 import { SignInPage } from '@/pages/SignInPage';
 import { SignUpPage } from '@/pages/SignUpPage';
 import { VerificationSuccessPage } from '@/pages/VerificationSuccessPage';
-import { Header } from '@/components/layout/Header';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
 import { JobsPage } from '@/components/jobs/JobsPage';
 import { PostJobForm } from '@/components/jobs/PostJobForm';
@@ -21,6 +20,7 @@ import { MyApplications } from '@/components/applications/MyApplications';
 import { ManageApplications } from '@/components/applications/ManageApplications';
 import { MentorshipHub } from '@/components/mentorship/MentorshipHub';
 import { AlumniLayout } from '@/components/layout/AlumniLayout';
+import { StudentLayout } from '@/components/layout/StudentLayout';
 
 const queryClient = new QueryClient();
 
@@ -51,7 +51,7 @@ const AppContent = () => {
     );
   }
 
-  // Alumni users get sidebar layout, students get header layout
+  // Alumni users get sidebar layout
   if (profile?.role === 'alumni') {
     return (
       <Routes>
@@ -93,24 +93,39 @@ const AppContent = () => {
     );
   }
 
-  // Student users get the original header layout
+  // Student users get the new sidebar layout
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <Header />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Routes>
-          <Route path="/" element={<DashboardHome />} />
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/profile" element={<StudentProfile />} />
-          <Route path="/applications" element={<MyApplications />} />
-          <Route path="/mentorship" element={<MentorshipHub />} />
-          <Route path="/messages" element={<MessagesList />} />
-          <Route path="/signin" element={<DashboardHome />} />
-          <Route path="/signup" element={<DashboardHome />} />
-          <Route path="/verification-success" element={<DashboardHome />} />
-        </Routes>
-      </main>
-    </div>
+    <Routes>
+      <Route path="/" element={<DashboardHome />} />
+      <Route path="/jobs" element={
+        <StudentLayout breadcrumb={{ items: [{ label: 'Browse Jobs' }] }}>
+          <JobsPage />
+        </StudentLayout>
+      } />
+      <Route path="/profile" element={
+        <StudentLayout breadcrumb={{ items: [{ label: 'Profile' }] }}>
+          <StudentProfile />
+        </StudentLayout>
+      } />
+      <Route path="/applications" element={
+        <StudentLayout breadcrumb={{ items: [{ label: 'My Applications' }] }}>
+          <MyApplications />
+        </StudentLayout>
+      } />
+      <Route path="/mentorship" element={
+        <StudentLayout breadcrumb={{ items: [{ label: 'Mentorship' }] }}>
+          <MentorshipHub />
+        </StudentLayout>
+      } />
+      <Route path="/messages" element={
+        <StudentLayout breadcrumb={{ items: [{ label: 'Messages' }] }}>
+          <MessagesList />
+        </StudentLayout>
+      } />
+      <Route path="/signin" element={<DashboardHome />} />
+      <Route path="/signup" element={<DashboardHome />} />
+      <Route path="/verification-success" element={<DashboardHome />} />
+    </Routes>
   );
 };
 
