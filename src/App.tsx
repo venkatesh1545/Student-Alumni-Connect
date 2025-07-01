@@ -20,11 +20,12 @@ import { MessagesList } from '@/components/messaging/MessagesList';
 import { MyApplications } from '@/components/applications/MyApplications';
 import { ManageApplications } from '@/components/applications/ManageApplications';
 import { MentorshipHub } from '@/components/mentorship/MentorshipHub';
+import { AlumniLayout } from '@/components/layout/AlumniLayout';
 
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, profile } = useAuth();
 
   if (loading) {
     return (
@@ -50,27 +51,60 @@ const AppContent = () => {
     );
   }
 
+  // Alumni users get sidebar layout, students get header layout
+  if (profile?.role === 'alumni') {
+    return (
+      <Routes>
+        <Route path="/" element={<DashboardHome />} />
+        <Route path="/post-job" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Post Job' }] }}>
+            <PostJobForm />
+          </AlumniLayout>
+        } />
+        <Route path="/manage-jobs" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Manage Jobs' }] }}>
+            <ManageJobs />
+          </AlumniLayout>
+        } />
+        <Route path="/manage-applications" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Applications' }] }}>
+            <ManageApplications />
+          </AlumniLayout>
+        } />
+        <Route path="/mentorship" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Mentorship' }] }}>
+            <MentorshipHub />
+          </AlumniLayout>
+        } />
+        <Route path="/messages" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Messages' }] }}>
+            <MessagesList />
+          </AlumniLayout>
+        } />
+        <Route path="/alumni-profile" element={
+          <AlumniLayout breadcrumb={{ items: [{ label: 'Profile' }] }}>
+            <AlumniProfile />
+          </AlumniLayout>
+        } />
+        <Route path="/signin" element={<DashboardHome />} />
+        <Route path="/signup" element={<DashboardHome />} />
+        <Route path="/verification-success" element={<DashboardHome />} />
+      </Routes>
+    );
+  }
+
+  // Student users get the original header layout
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
-          {/* Job Routes */}
           <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/post-job" element={<PostJobForm />} />
-          <Route path="/manage-jobs" element={<ManageJobs />} />
-          {/* Profile Routes */}
           <Route path="/profile" element={<StudentProfile />} />
-          <Route path="/alumni-profile" element={<AlumniProfile />} />
-          {/* Application Routes */}
           <Route path="/applications" element={<MyApplications />} />
-          <Route path="/manage-applications" element={<ManageApplications />} />
-          {/* Mentorship Routes */}
           <Route path="/mentorship" element={<MentorshipHub />} />
-          {/* Communication Routes */}
           <Route path="/messages" element={<MessagesList />} />
-          {/* Redirect Routes */}
           <Route path="/signin" element={<DashboardHome />} />
           <Route path="/signup" element={<DashboardHome />} />
           <Route path="/verification-success" element={<DashboardHome />} />
