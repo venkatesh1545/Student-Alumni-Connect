@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Edit, Trash2, Eye, Users, Plus } from 'lucide-react';
+import { Edit, Trash2, Eye, Users, Plus, X } from 'lucide-react';
 
 export const ManageJobs = () => {
   const { user } = useAuth();
@@ -32,6 +31,9 @@ export const ManageJobs = () => {
     external_url: '',
     interview_questions: ''
   });
+
+  const [preferredColleges, setPreferredColleges] = useState<string[]>([]);
+  const [collegeInput, setCollegeInput] = useState('');
 
   const { data: jobs = [], isLoading } = useQuery({
     queryKey: ['alumni-jobs', user?.id],
@@ -52,6 +54,17 @@ export const ManageJobs = () => {
     },
     enabled: !!user
   });
+
+  const addCollege = () => {
+    if (collegeInput.trim() && !preferredColleges.includes(collegeInput.trim())) {
+      setPreferredColleges([...preferredColleges, collegeInput.trim()]);
+      setCollegeInput('');
+    }
+  };
+
+  const removeCollege = (college: string) => {
+    setPreferredColleges(preferredColleges.filter(c => c !== college));
+  };
 
   const toggleJobStatus = useMutation({
     mutationFn: async ({ jobId, isActive }: { jobId: string; isActive: boolean }) => {
@@ -97,7 +110,8 @@ export const ManageJobs = () => {
         ...formData,
         alumni_id: user.id,
         requirements: formData.requirements.split('\n').filter(req => req.trim()),
-        keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k)
+        keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k),
+        preferred_colleges: preferredColleges
       };
 
       if (editingJob) {
@@ -137,6 +151,7 @@ export const ManageJobs = () => {
       external_url: '',
       interview_questions: ''
     });
+    setPreferredColleges([]);
     setEditingJob(null);
   };
 
@@ -154,6 +169,7 @@ export const ManageJobs = () => {
       external_url: job.external_url || '',
       interview_questions: job.interview_questions || ''
     });
+    setPreferredColleges(job.preferred_colleges || []);
     setIsDialogOpen(true);
   };
 
@@ -207,6 +223,23 @@ export const ManageJobs = () => {
                   <div>
                     <CardTitle className="text-xl">{job.title}</CardTitle>
                     <p className="text-gray-600 mt-1">{job.company} • {job.location}</p>
+                    {job.preferred_colleges && job.preferred_colleges.length > 0 && (
+                      <div className="flex gap-1 mt-2">
+                        <span className="text-sm text-gray-500">Preferred:</span>
+                        <div className="flex flex-wrap gap-1">
+                          {job.preferred_colleges.slice(0, 3).map((college: string, index: number) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {college}
+                            </Badge>
+                          ))}
+                          {job.preferred_colleges.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{job.preferred_colleges.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={job.is_active ? "default" : "secondary"}>
@@ -352,6 +385,37 @@ export const ManageJobs = () => {
                 value={formData.keywords}
                 onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
               />
+            </div>
+
+            <div>
+              <Label htmlFor="preferred_colleges">Preferred Colleges</Label>
+              <div className="flex gap-2 mb-2">
+                <Input
+                  value={collegeInput}
+                  onChange={(e) => setCollegeInput(e.target.value)}
+                  placeholder="Enter college name"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addCollege();
+                    }
+                  }}
+                />
+                <Button type="button" onClick={addCollege} variant="outline">
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {preferredColleges.map((college, index) => (
+                  <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                    {college}
+                    <X
+                      className="w-3 h-3 cursor-pointer"
+                      onClick={() => removeCollege(college)}
+                    />
+                  </Badge>
+                ))}
+              </div>
             </div>
 
             <div>

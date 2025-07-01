@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProfileImageUpload } from '@/components/profile/ProfileImageUpload';
 import { toast } from 'sonner';
 
 export const AlumniProfile = () => {
@@ -75,6 +75,13 @@ export const AlumniProfile = () => {
       });
     }
   }, [alumniProfile, profile]);
+
+  const getInitials = () => {
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase();
+    }
+    return user?.email?.[0]?.toUpperCase() || 'U';
+  };
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
@@ -169,6 +176,14 @@ export const AlumniProfile = () => {
               <CardTitle>Personal Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="flex justify-center mb-6">
+                <ProfileImageUpload
+                  currentImageUrl={profile?.avatar_url || ''}
+                  userInitials={getInitials()}
+                  size="lg"
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="first_name">First Name</Label>

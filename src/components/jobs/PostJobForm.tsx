@@ -9,7 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { X } from 'lucide-react';
 
 export const PostJobForm = () => {
   const { user } = useAuth();
@@ -23,8 +25,23 @@ export const PostJobForm = () => {
     description: '',
     requirements: '',
     keywords: '',
-    external_url: ''
+    external_url: '',
+    interview_questions: ''
   });
+
+  const [preferredColleges, setPreferredColleges] = useState<string[]>([]);
+  const [collegeInput, setCollegeInput] = useState('');
+
+  const addCollege = () => {
+    if (collegeInput.trim() && !preferredColleges.includes(collegeInput.trim())) {
+      setPreferredColleges([...preferredColleges, collegeInput.trim()]);
+      setCollegeInput('');
+    }
+  };
+
+  const removeCollege = (college: string) => {
+    setPreferredColleges(preferredColleges.filter(c => c !== college));
+  };
 
   const postJobMutation = useMutation({
     mutationFn: async () => {
@@ -34,7 +51,8 @@ export const PostJobForm = () => {
         ...formData,
         alumni_id: user.id,
         requirements: formData.requirements.split('\n').filter(req => req.trim()),
-        keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k)
+        keywords: formData.keywords.split(',').map(k => k.trim()).filter(k => k),
+        preferred_colleges: preferredColleges
       };
 
       const { error } = await supabase
@@ -54,8 +72,10 @@ export const PostJobForm = () => {
         description: '',
         requirements: '',
         keywords: '',
-        external_url: ''
+        external_url: '',
+        interview_questions: ''
       });
+      setPreferredColleges([]);
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
     },
     onError: (error: any) => {
@@ -164,12 +184,57 @@ export const PostJobForm = () => {
           </div>
 
           <div>
+            <Label htmlFor="preferred_colleges">Preferred Colleges (Optional)</Label>
+            <div className="flex gap-2 mb-2">
+              <Input
+                value={collegeInput}
+                onChange={(e) => setCollegeInput(e.target.value)}
+                placeholder="Enter college name"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addCollege();
+                  }
+                }}
+              />
+              <Button type="button" onClick={addCollege} variant="outline">
+                Add
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {preferredColleges.map((college, index) => (
+                <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                  {college}
+                  <X
+                    className="w-3 h-3 cursor-pointer"
+                    onClick={() => removeCollege(college)}
+                  />
+                </Badge>
+              ))}
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              Add colleges you want to prioritize for this position
+            </p>
+          </div>
+
+          <div>
             <Label htmlFor="external_url">External Application URL</Label>
             <Input
               id="external_url"
               value={formData.external_url}
               onChange={(e) => setFormData({ ...formData, external_url: e.target.value })}
               placeholder="https://company.com/careers/apply"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="interview_questions">Common Interview Questions (Optional)</Label>
+            <Textarea
+              id="interview_questions"
+              value={formData.interview_questions}
+              onChange={(e) => setFormData({ ...formData, interview_questions: e.target.value })}
+              rows={3}
+              placeholder="List common questions you might ask during interviews..."
             />
           </div>
 

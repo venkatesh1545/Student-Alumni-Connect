@@ -189,10 +189,12 @@ export type Database = {
           description: string
           external_url: string | null
           id: string
+          interview_questions: string | null
           is_active: boolean | null
           job_type: string | null
           keywords: string[] | null
           location: string | null
+          preferred_colleges: string[] | null
           requirements: string[] | null
           salary_range: string | null
           title: string
@@ -205,10 +207,12 @@ export type Database = {
           description: string
           external_url?: string | null
           id?: string
+          interview_questions?: string | null
           is_active?: boolean | null
           job_type?: string | null
           keywords?: string[] | null
           location?: string | null
+          preferred_colleges?: string[] | null
           requirements?: string[] | null
           salary_range?: string | null
           title: string
@@ -221,10 +225,12 @@ export type Database = {
           description?: string
           external_url?: string | null
           id?: string
+          interview_questions?: string | null
           is_active?: boolean | null
           job_type?: string | null
           keywords?: string[] | null
           location?: string | null
+          preferred_colleges?: string[] | null
           requirements?: string[] | null
           salary_range?: string | null
           title?: string
@@ -450,16 +456,19 @@ export type Database = {
           achievements: Json | null
           certifications: string[] | null
           cgpa: number | null
+          college_name: string | null
           created_at: string
           department: string | null
           graduation_year: number | null
           id: string
           internships: Json | null
+          job_type_preference: string | null
           placement_readiness_score: number | null
           projects: Json | null
           resume_text: string | null
           resume_url: string | null
           skills: string[] | null
+          stream: string | null
           student_id: string | null
           university: string | null
           updated_at: string
@@ -468,16 +477,19 @@ export type Database = {
           achievements?: Json | null
           certifications?: string[] | null
           cgpa?: number | null
+          college_name?: string | null
           created_at?: string
           department?: string | null
           graduation_year?: number | null
           id: string
           internships?: Json | null
+          job_type_preference?: string | null
           placement_readiness_score?: number | null
           projects?: Json | null
           resume_text?: string | null
           resume_url?: string | null
           skills?: string[] | null
+          stream?: string | null
           student_id?: string | null
           university?: string | null
           updated_at?: string
@@ -486,16 +498,19 @@ export type Database = {
           achievements?: Json | null
           certifications?: string[] | null
           cgpa?: number | null
+          college_name?: string | null
           created_at?: string
           department?: string | null
           graduation_year?: number | null
           id?: string
           internships?: Json | null
+          job_type_preference?: string | null
           placement_readiness_score?: number | null
           projects?: Json | null
           resume_text?: string | null
           resume_url?: string | null
           skills?: string[] | null
+          stream?: string | null
           student_id?: string | null
           university?: string | null
           updated_at?: string
